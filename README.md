@@ -22,7 +22,7 @@ Este é um sistema onde usuários podem ser cadastrados, consultados, editados e
 1. Criar a tabela necessária no BD, de acordo com o script DDL.sql
 2. Configurar a conexão com o BD no arquivo conexao.php
 3. Executar o arquivo run_server.cmd
-4. Acessar a aplicação em hhtp://localhost:8080 ou http://localhost:8000
+4. Acessar a aplicação em http://localhost:8080
 
 # Autor
 | [<img src="https://user-images.githubusercontent.com/62960702/204162297-97b01b7d-7c96-4b1e-bb11-d6848c06b746.jpeg" width=115><br><sub>Henrique Salles</sub>](https://github.com/Henrique-Salles) |
