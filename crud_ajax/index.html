@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <form action="salvar.php" method="POST" id="cadastro">
+        ID:    <input type="text" name="id_usuario" randonly disabled><br>
+        Nome:  <input type="text" name="nome"><br>
+        Email: <input type="email" name="email"><br>
+        Senha: <input type="password" name="senha"><br>
+        <input type="submit" value="Salvar">
+    </form>
+    <br>
+
+    <button onclick="listarUsuarios();">Atualizar lista</button>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th colspan="2">Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="5">Não há usuários cadastrados.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <script>
+        $("#cadastro").submit(function (event) {
+
+            event.preventDefault();
+            var idUsuario = $("input[name='id_usuario']").val();
+            var nome = $("input[name='nome']").val();
+            var email = $("input[name='email']").val();
+            var senha = $("input[name='senha']").val();
+
+            $.post("salvar.php",
+                    {id_usuario: idUsuario, nome: nome, email: email, senha: senha},
+                    function (data) {
+                        alert(data);
+                    })
+                    .fail(function () {
+                        alert("Falha ao tentar executar o comando!");
+
+ 
+                    })
+                    .done(function () {
+                        listarUsuarios();
+                        limparForm();
+                    });  
+        });
+
+            function limparForm() {
+                $("input[name='id_usuario']").val('');
+                $("input[name='id_nome']").val('');
+                $("input[name='id_email']").val('');
+                $("input[name='id_senha']").val('');
+            }
+
+            function listarUsuarios() {
+                $("tbody").empty();
+
+                $.get("usuarios.php", function (data) {
+                    alert(usuarios);
+                    var usuarios = JSON.parse(data);
+                    for (var i in usuarios) {
+                         console.log(usuarios[i]);
+                         $("tbody").append("<tr><td>" + usuarios[i].id_usuario + "</td>" + "<td>" + usuarios[i].nome + 
+                                           "</td>" + "<td>" + usuarios[i].email + "</td>" +
+                                           "<td><button onclick=\"editar(" + usuarios[i].id_usuario + ', ' + "'" +  
+                                            usuarios[i].nome + "'," + "'" + usuarios[i].email + "');\">Editar</button></td>" + 
+                                            "<td><button onclick=\"excluir(" + usuarios[i].id_usuario + ");\">Excluir</button</td>" +
+                                            "</tr>");
+                    }
+                })
+                .fail(function () {
+                    alert("Falha ao tentar executar o comando!")
+                });
+            }
+
+            function editar(id_usuario, nome, email) {
+                $("input[name='id_usuario']").val(id_usuario);
+                $("input[name='nome']").val(nome);
+                $("input[name='email']").val(email);
+
+                $("input[name='nome']").focus();
+            }
+
+            function excluir(idUsuario) {
+                var excluir = confirm("Tem certeza de que deseja excluir o usuário " + idUsuario + "?");
+
+                if (excluir) {
+                    $.get("excluir.php?id_usuario=" + idUsuario, function (data) {
+                            alert(data);
+                    })
+                    .fail(function () {
+                        listarUsuarios();
+                    });
+                }
+
+            }
+
+            $(document).ready(function() {
+                listarUsuarios();
+            });
+
+    </script>
+</html>
